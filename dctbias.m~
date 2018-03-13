@@ -1,0 +1,94 @@
+%dct data
+
+%first, need to make a master bias (average)
+%will probably want to do in a func
+
+%next, a master flat (resistant mean)
+%will probably want to do in a func
+
+%then, calibrate sci image using master flats and bias
+%probs want to do in a func
+
+%coadd calibrated?
+
+
+
+%do science on calibrated image. most likely reuse radialprofile.m
+%
+
+bias1 = rfits('lmi_20160528_0001.fits');
+bias2 = rfits('lmi_20160528_0002.fits');
+bias3 = rfits('lmi_20160528_0003.fits');
+bias4 = rfits('lmi_20160528_0004.fits');
+bias5 = rfits('lmi_20160528_0005.fits');
+bias6 = rfits('lmi_20160528_0006.fits');
+bias7 = rfits('lmi_20160528_0007.fits');
+bias8 = rfits('lmi_20160528_0008.fits');
+bias9 = rfits('lmi_20160528_0009.fits');
+bias10 = rfits('lmi_20160528_0010.fits');
+bias11 = rfits('lmi_20160528_0332.fits'); %be careful about different exposure times and times of night, these probably shouldnt be added
+bias12= rfits('lmi_20160528_0333.fits');
+bias13= rfits('lmi_20160528_0334.fits');
+bias14= rfits('lmi_20160528_0335.fits');
+bias15 = rfits('lmi_20160528_0336.fits');
+bias16 = rfits('lmi_20160528_0337.fits');
+bias17= rfits('lmi_20160528_0338.fits');
+bias18= rfits('lmi_20160528_0339.fits');
+bias19 = rfits('lmi_20160528_0340.fits');
+bias20 = rfits('lmi_20160528_0341.fits');
+
+
+image1 = bias1.data;
+image2 = bias2.data;
+image3 = bias3.data;
+image4 = bias4.data;
+image5 = bias5.data;
+image6 = bias6.data;
+image7 = bias7.data;
+image8 = bias8.data;
+image9 = bias9.data;
+image10 = bias10.data;
+image11 = bias11.data;
+image12 = bias12.data;
+image13 = bias13.data;
+image14 = bias14.data;
+image15 = bias15.data;
+image16 = bias16.data;
+image17 = bias17.data;
+image18 = bias18.data;
+image19 = bias19.data;
+image20 =bias20.data;
+
+imagesc(image1,[1150,1200]),colorbar();
+
+a = image1;
+a(:,:,2)= image2;
+a(:,:,3)= image3;
+a(:,:,4)= image4;
+a(:,:,5)= image5;
+a(:,:,6)= image6;
+a(:,:,7)= image7;
+a(:,:,8)= image8;
+a(:,:,9)= image9;
+a(:,:,10)=image10;
+a(:,:,11)=image11;
+a(:,:,12)= image12;
+a(:,:,13)= image13;
+a(:,:,14)= image14;
+a(:,:,15)= image15;
+a(:,:,16)= image16;
+a(:,:,17)= image17;
+a(:,:,18)= image18;
+a(:,:,19)= image19;
+a(:,:,20)=image20;
+
+masterbias = median(a,3);
+masterbias = rot90(masterbias);
+figure()
+imagesc(masterbias,[1150,1200]),colorbar();
+%fitswrite(masterbias, 'masterbias.fits');
+
+sciimage1 = rfits('lmi_20160528_0129_raw.fits');
+calibrate= sciimage1 - masterbias;
+figure()
+imagesc(calibrate,[1250,1400]),colorbar();
