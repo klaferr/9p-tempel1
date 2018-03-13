@@ -1,0 +1,97 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1038\cocoasubrtf360
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\margl1440\margr1440\vieww23160\viewh17820\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\f0\fs24 \cf0 with Spitzer data:\
+\
+I want to be able to use aperture photometry in order to measure the size and flux from the comet in each filter from each observation data (post2.18 for example). \
+Currently: Have imported spitzer files into matlab, rotated for appearances, using skyAP and targetAP(adjusted code to fit needs, build of aperE fun but much simpler), using nebsize (again, adjusted for our purposes, renamed test_size_adapted.m, not a fun but a script). Focusing on the long exposure images.\
+To Do Next: Determine if an aperture for tail is useful/possible. Determine how to bin for the size of the comet as it may vary over each image. Meaure flux, error, and size for all Spitzer images. Quantities should be put into spreadsheet to compare: the same distance, DCT observations, near observations, far observations. \
+Current Issues: error is too large, flux is considered a raw flux and does not take into account gain or quantum efficiency (does this even matter). \
+\
+1:50pm 2/15\
+Idea: can i write a loop in matlab to go through all of the Spitzer files and make plots? Probably, but this would turn out so many plots, and take a lot of computing time. for now, go through a few, ranging in size, and compare. Instead, set up a basic file which the rifts importing names can be changed, and in the future can be used. \
+coding: used rot90(.data) in matlab, because fits files are rotated 90 degrees clockwise when matlab opens them. it will be easier to work with data that appears in matlab and ds9 in similar fashions. import aperE, attempting to use on long exposure time since short is so hard to identify shape of coma with.\
+\
+2/20/18\
+how to quantify size and brightness when different images have different fov sizes? \
+idea: using logs, we can determine the fov size? \
+need to keep track of exposure times as well\
+in the future: will have to factor in the exposure times, as well as fov, into flux calculation.\
+not yet sure how to determine fov/object size\
+\
+Coding:\
+tried using aperE(a,550,370,25,40,100,100,115,115,0) and could not visibly determine if the aperture was a good fit, flux was 1.4905 *10^3 +/- 2.0158*10^3 +6.0942i\
+The aperE and adapted "newaperE" functions keep taking away from the image based on what is in the center. I believe if i use the code my ASTR310 team used (in Github: Caleb Harada ASTR310 PROJ1) i will be able to just place apertures on to, measure what is inside them, without removing that flux from the image. Code is edited from what is in github file, to better apply to our new science. \
+using the same code on the short exposure image for the same heliocentric and filter, we get about 1/2 the flux as the long exposure. Does this make sense?\
+\
+Issues:\
+how to find median sky value in adu, is that given from skyAP fun?\
+error is very large. for post1.54-irac3.6-long, flux is 271 +/- 257 with an aperture of 10. \
+in targetap, gives out raw flux: could this be why low values/ how to fix?  \
+how to find kccd? aperE lists kccd as ADU/electron, or gain. \
+\
+Attempt: to make fan shaped aperture for measuring tail - if I want to focus soley on the tail, i will need to subtract the target aperture from the measurement of the tail. for the aperture, probably a very long and skinny triangle. but it does fad off. not sure what the best approach is. dust fades off very quickly in even the closest of photos, will we be able to detect a significant tail? in 4.5, the tail is much more obvious.\
+\
+idea: we could also, instead of or in addition to the fan aperture to measure the tail, simply do a larger elliptical aperture to measure anything outside the super noticeable coma, which would measure the outburst like the one seen in post1.54-irac4.5.\
+\
+Issue: not sure how to get rectangle, let alone a triangle to work with the current set up of the targetAP function.\
+Second Issue: still need to determine a way to figure out true meaning behind the flux values, and fix the errors. Need to get a move on with taking down data to keep with timeline. should come in if free time after 12pm class tomorrow, b4 colloquium at 4pm.\
+										\
+2/22/18\
+Issue: How to decide the size of the aperture around the coma? fix the axis in all codes, size will not work great on any outbursts, unless we run through multiple "center" values. Develop a code to do not just the center values. \
+\
+Update: Using test_size_adapted.m, created an figure which contains an image and two graphs, showing at the center point of the aperture (same aperture as used in test_1_spitzerdata.m) the adu values for each point in that row or column. This can help us determine the size of what is imaged.\
+\
+Next: I want to use this code for other images. To do this, must choose center for each and import each file. \
+\
+Info: post154_irac36_long_t1 shows the comet using a colorbar that reaches from close to min to close to max, where as ""_t2 shows the comet between sky value - 5*sigma sky to sky plus 25*sigma sky. Not sure which one is best. Have to use test_1_spitzerdata to get the flux for the comet, test_size_adapted gives the shape of the comet and a little bit of the tail. could potentially use the values to find a flux from the size. also, size can help better define the aperture used. \
+leaving off: vie done post1.54 both filters, only long exposures. started excel table, and started saving the images. need to adjust color bar and center every time heliocentric distance changes\
+\
+end of day: just did the size for post206 irac3.6, need to adjust aperture size\
+\
+2/27 \
+created a code which creates a graph to show radial apertures, must be adjust for each image put in. saved graph for post1.56 thus far. decision has been made to ignore the tail, focus on the coma. \
+issue: need to determine which data i should save, or write down, as i go through all of the spitzer data. need to compare dates. need to take into account scale of colorbar, and its meaning.\
+the radial profiles are starting to only show drop offs at post2.30 au hellocentric, since i cant do parts of pixels i cant get the true flux/area value either\
+also all of them are labeled y-axis as ful but its actually flux/unitarea\
+end of the day: on post2.37. its so small\
+\
+3/1\
+resuming with going through the spritzer data.\
+Issues: Need to quantify the color bar. Need to determine what data needs to be written down for each image done. need to quantify the error. need to determine date for each image based on heliocentric data. \
+Coding: how to make matlab open the files up for fullscreen?\
+\
+Print: the post2.37 actual ds9 iamge, ask about why its two things. is the one without an obvious met the short frame, and they were just saved to one file? print a good radial profile and a bad one (one where the center is too small). explain how the pixel's are limiting. ask about if error bars are needed. \
+radial profiles have b = a+4 unless otherwise noted \
+question: why does pre1.56 look so different from pre1.55 when the heliocentric distance only changed by 0.01 AU?? looks brighter/larger again in pre1.58. the values are much larger than normal in the pre1.55, apparently there is a lot of sound (is that the word i am looking for?)\
+left off at 1.58. what to do with coma/ radial profile when the coma is basically one pixel. bring example. \
+\
+going forward: need to work with dct data, need to finish spitzer. to get calibrated images from dct, need to what?\
+\
+quick review for dct future work: don't need darks if we have bias images, a bias image corrects for the read out signal. flats correct for lens/optical imperfections. since we dont have darks, just use the bias? median combine the flat fields. \
+\
+try to plot a powerlaw decline next to a really good radial profile\
+\
+next time: want to fit different functions to the decline, i believe its a power law decline. may use emcee code from dr. gezaris class or some replica of it, if not, just going to plot the fun in matlab and fight with it. \
+\
+3/5/18\
+The noisy image, pre1.56 from Spitzer is listed as only "ok". that is why they look different. at last meeting learned how to adjust color/scale in DS9. \
+Going forward: need to determine y-scale in physical size for Spitzer images, can do that possibly just by image header, if we quantify the size of each pixel, we have the aperture size for the boundaries. \
+With DST data, use resistant mean instead of median for median combining the flats. bias corrects for read out error, just need to average these to get a master bias \
+Plot power law decline onto post1.54 to show the expected decline rate. \
+\
+Note: believe the Spitzer images with two splits could be the long and the short on one frame, or could be taking out a star \
+\
+spitzer: issue: pre3.4, i can't truly identify the comet, as it is only about one pixel (what i believe to be comet) pre3.5 irac 4.5 is more easily identifiable, try with code. does not work well. what to do?\
+\
+determine y scale on images - \
+\
+does it matter that the radial profile falls off as the inverse square// power law decline? what is the physical meaning of that??? taking a break from that, i want to start looking at dct data. \
+\
+DCT: need to average bias images. need to resistant mean combine the flats. will i be coadding all of the calibrated images, and then doing the radialprofile?\
+\
+**** don't forget about gain! in each image header\
+}
